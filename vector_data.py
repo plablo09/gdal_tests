@@ -26,54 +26,6 @@ class InvalidPostgisLayer(Exception):
     def __str__(self):
         return repr(self.value)
 
-def pretify_wkt(str):
-    """Regresa una lista con los renglones indentados para presentar el wkt como leible para humano."""
-    lista = str.split(',')
-    renglones=[]
-    ident = 0;
-    for i,el in enumerate(lista):
-       abren = el.count('[')
-       cierran = el.count(']')
-       ident += abren - cierran
-       espacios = '';
-       for x in range(1,ident):
-        espacios +='  '
-       if el.startswith('PROJCS'):
-           renglones.append(espacios + el + ',')
-       if el.startswith('GEOGCS'):
-           renglones.append(espacios + el + ',')
-       if el.startswith('DATUM'):
-           renglones.append(espacios + el + ',')
-       if el.startswith('SPHEROID'):
-           renglones.append(espacios + el + ',' + lista[i+1] + ',' + lista[i+2] +',')
-       if el.startswith('AUTHORITY'):
-           renglones.append(espacios + el + ',' + lista[i+1] + ',' )
-       if el.startswith('PRIMEM'):
-           renglones.append(espacios + el + ',' + lista[i+1] + ',' )
-       if el.startswith('UNIT'):
-           renglones.append(espacios + el + ',' + lista[i+1] + ',' )
-       if el.startswith('PROJECTION'):
-           renglones.append(espacios + el + ',')
-       if el.startswith('PARAMETER'):
-           renglones.append(espacios + el +','+ lista[i+1]+',')
-       if el.startswith('AXIS'):
-           renglones.append(espacios + el +','+ lista[i+1]+',')
-       if el.startswith('VERT_CS'):
-           renglones.append(espacios + el + ',')
-       if el.startswith('VERT_DATUM'):
-           renglones.append(espacios + el + ',')
-       if el.startswith('COMPD_CS'):
-           renglones.append(espacios + el + ',')
-       if el.startswith('TOWGS84'):
-           renglones.append(espacios + el + ',')
-       if el.startswith('FITTED_CS'):
-           renglones.append(espacios + el + ',')
-       if el.startswith('LOCAL_CS'):
-           renglones.append(espacios + el + ',')
-       if el.startswith('LOCAL_DATUM'):
-           renglones.append(espacios + el + ',')
-
-    return renglones
 
 
 class VectorDataSource():
