@@ -4,9 +4,9 @@ import gdal
 import os
 from gdalconst import *
 
-dataset = gdal.Open("raster/39_ortofoto_e14s427q41.img", GA_ReadOnly)
+dataset = gdal.Open("data/ortofoto_e14s427q41.img", GA_ReadOnly)
 input_projection = dataset.GetProjectionRef()
-spatial_reference = osr.SpatialReference()   
+spatial_reference = osr.SpatialReference()
 spatial_reference.ImportFromWkt(input_projection)
 
 proj_srid = spatial_reference.GetAttrValue("AUTHORITY",1)
@@ -36,38 +36,33 @@ if proj_srid != 4326:
        point = ogr.Geometry(ogr.wkbPoint)
        point.AddPoint_2D(ring.GetPoints()[p][0],ring.GetPoints()[p][1])
        bbox.append(point)
-       
-    
 
-print str()
 
-#     
-# poly = ogr.Geometry(ogr.wkbPolygon)
-# poly.AddGeometry(ring)
-# poly3d= poly.ExportToWkt()
-# print poly3d
-#   
-# outShapefile = "raster/raster_4326.shp"
-# outDriver = ogr.GetDriverByName("ESRI Shapefile")
-# # Remove output shapefile if it already exists
-# if os.path.exists(outShapefile):
-#     outDriver.DeleteDataSource(outShapefile) 
-#    
-# # Create the output shapefile
-# outDataSource = outDriver.CreateDataSource(outShapefile)
-# outLayer = outDataSource.CreateLayer("states_extent_4326", geom_type=ogr.wkbPolygon)
-#    
-# # Add an ID field
-# idField = ogr.FieldDefn("id", ogr.OFTInteger)
-# outLayer.CreateField(idField)
-#    
-# # Create the feature and set values
-# featureDefn = outLayer.GetLayerDefn()
-# feature = ogr.Feature(featureDefn)
-# feature.SetGeometry(poly)
-# feature.SetField("id", 1)
-# outLayer.CreateFeature(feature)
-#    
-# #Close DataSource
-# #dataset.Destroy()
-# outDataSource.Destroy()
+#
+poly = ogr.Geometry(ogr.wkbPolygon)
+poly.AddGeometry(ring)
+#archivo de salida
+outShapefile = "data/raster_extent.shp"
+outDriver = ogr.GetDriverByName("ESRI Shapefile")
+# Remove output shapefile if it already exists
+if os.path.exists(outShapefile):
+    outDriver.DeleteDataSource(outShapefile)
+
+# Create the output shapefile
+outDataSource = outDriver.CreateDataSource(outShapefile)
+outLayer = outDataSource.CreateLayer("raster_extent", geom_type=ogr.wkbPolygon)
+
+# Add an ID field
+idField = ogr.FieldDefn("id", ogr.OFTInteger)
+outLayer.CreateField(idField)
+
+# Create the feature and set values
+featureDefn = outLayer.GetLayerDefn()
+feature = ogr.Feature(featureDefn)
+feature.SetGeometry(poly)
+feature.SetField("id", 1)
+outLayer.CreateFeature(feature)
+
+#Close DataSource
+#dataset.Destroy()
+outDataSource.Destroy()
